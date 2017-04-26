@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome to TodoApp</title>
+</head>
+<body>
+<form action="/" method="post">{% csrf_token %}
+	<input type="text" name="task_data"/>
+	
+	<input type="submit"/>
+</form>
+<a href='/delete_all/'> <button>Delete All</button> </a> <br>
+
+{% for x in object_list %}
+    <a href='/delete/{{x.id}}/'> Delete</a>
+	{{x.task}}<br>
+	
+{% endfor %}
+</body>
+</html>
