@@ -5,6 +5,15 @@
 </head>
 <body>
 <a href=""><h3>MY first Todo list</h3> </a>
+<form action="/">
+<select name="choose" onchange="this.form.submit()" >
+   <option >Sort By</option>
+   <option value="1">Priority</option>
+   <option value="2">Date</option>
+ </select>
+</form>
+<br>
+<br>
 <form action="/" method="post">{% csrf_token %}
 	<input type="text" name="task_data"/>
 	<select name="priority" >
@@ -17,7 +26,7 @@
 </form>
 <a href='/delete_all/'> <button>Delete All</button> </a> <br>
 
-{% for x in object_list %}
+{% for x in todo_list %}
     <a href='/delete/{{x.id}}/'> Delete</a>
     <a href="/update/{{x.id}}/"> update </a>
 	{{x.task}}
