@@ -19,8 +19,9 @@ from todoapp import views
 
 urlpatterns = [
 	url(r'^$', views.test),
-	url(r'^delete/(\d+)/$',views.delete_item),
-	
+	url(r'^delete/(\d+)/$',views.delete_item),	
 	url(r'^delete_all/$',views.delete_all),
+    url(r'^update/(\d+)/$',views.update_list),
+    url(r'^newpage/(\d+)/$',views.newpage),
     url(r'^admin/', admin.site.urls),
 ]
