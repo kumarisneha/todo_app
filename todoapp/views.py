@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from todoapp.models import Todolist, Registration
 import datetime
+from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 def registration_page(request):
     if request.method == 'POST':
@@ -14,6 +15,24 @@ def registration_page(request):
         a = Registration(user_name = user_name, email_id = emailid, password= passwd)
         a.save()    
     return render(request, 'registration.html')
+
+def login_page(request):
+    return render(request, 'login.html')
+
+def login_valid(request):
+    if request.method == 'POST':
+        email_id = request.POST.get('email_id', None)
+        passwd= request.POST.get('passwd',None)
+        print email_id
+        print passwd
+        try:
+            email_val= Registration.objects.get(email_id = email_id, password = passwd)
+            print email_val
+            return HttpResponseRedirect('/')
+        except ObjectDoesNotExist:
+            t = "Email or password is not valid" 
+            return render(request,'login.html', {'text':t})     
+    return HttpResponseRedirect('/')
 
 def test(request):
     if request.method == 'POST':
