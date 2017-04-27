@@ -3,9 +3,18 @@ from __future__ import unicode_literals
 import time
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from todoapp.models import Todolist
+from todoapp.models import Todolist, Registration
 import datetime
 # Create your views here.
+def registration_page(request):
+    if request.method == 'POST':
+        user_name = request.POST.get('user_name', 'User name is not given')
+        emailid = request.POST.get('email_id', 'emailid not defined')
+        passwd= request.POST.get('passwd','not given')
+        a = Registration(user_name = user_name, email_id = emailid, password= passwd)
+        a.save()    
+    return render(request, 'registration.html')
+
 def test(request):
     if request.method == 'POST':
         task_data = request.POST.get('task_data', 'Task not defined')

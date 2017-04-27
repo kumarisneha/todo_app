@@ -9,6 +9,11 @@ class Todolist(models.Model):
 	task = models.CharField(max_length=200, null=True)
 	priority = models.IntegerField(default= '3')
 	due_date = models.DateTimeField(null=True)
+
+class Registration(models.Model):
+    user_name= models.CharField(max_length = 50, null= True)
+    email_id = models.CharField(max_length = 50, null= True)   
+    password= models.CharField(max_length = 50, null= True)
 	
 	
 
