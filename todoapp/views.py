@@ -35,7 +35,9 @@ def update_list(request, id):
 def newpage(request, id):
     if request.method == 'POST':
         name=request.POST.get("name", "Task is updated")
+        pri_val= request.POST.get('priority','3')
         obj = Todolist.objects.get(id=id)
+        obj.priority= pri_val
         obj.task=name
         obj.save()
         return HttpResponseRedirect('/')
