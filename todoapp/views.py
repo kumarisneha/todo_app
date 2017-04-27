@@ -4,16 +4,17 @@ import time
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from todoapp.models import Todolist
-
+import datetime
 # Create your views here.
 def test(request):
     if request.method == 'POST':
         task_data = request.POST.get('task_data', 'Task not defined')
         priority = request.POST.get('priority', 3)
         task_date = request.POST.get('task_date',None)
-        a = Todolist(task = task_data, priority=priority, due_date=task_date)
-        a.save()
-        
+        if task_date:
+            task_date=datetime.datetime.strptime(task_date, '%Y-%m-%d %H:%M')
+        a = Todolist(task = task_data, priority = priority, due_date= task_date)
+        a.save()       
     sample = {'object_list': Todolist.objects.all().order_by('priority')}
     return render(request, 'index.html', sample)
 
@@ -37,9 +38,13 @@ def newpage(request, id):
     if request.method == 'POST':
         name=request.POST.get("name", "Task is updated")
         pri_val= request.POST.get('priority','3')
+        update_date=request.POST.get("update_date", None)
+        if update_date:
+            update_date=datetime.datetime.strptime(update_date, '%Y-%m-%d %H:%M')
         obj = Todolist.objects.get(id=id)
         obj.priority= pri_val
         obj.task=name
+        obj.due_date=update_date
         obj.save()
         return HttpResponseRedirect('/')
 
