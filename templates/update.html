@@ -3,6 +3,11 @@
 <body>
 <form action="/newpage/{{xyz.id}}/" method="post">{% csrf_token %}
 	<input type="text" name="name" value="{{xyz.task}}">
+	<select name="priority" >
+  <option {% if xyz.priority == 1 %}selected="selected"{% endif %} value="1">High</option>
+  <option {% if xyz.priority == 2 %}selected="selected"{% endif %} value="2">Medium</option>
+  <option {% if xyz.priority == 3 %}selected="selected"{% endif %} value="3">Low</option>
+</select><br>
     <input type="submit">
 </form>
 
