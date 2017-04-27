@@ -9,10 +9,11 @@ from todoapp.models import Todolist
 def test(request):
     if request.method == 'POST':
         task_data = request.POST.get('task_data', 'Task not defined')
-        a = Todolist(task = task_data)
+        priority = request.POST.get('priority', 3)
+        a = Todolist(task = task_data, priority=priority)
         a.save()
         
-    sample = {'object_list': Todolist.objects.all()}
+    sample = {'object_list': Todolist.objects.all().order_by('priority')}
     return render(request, 'index.html', sample)
 
 def delete_item(request, id):
