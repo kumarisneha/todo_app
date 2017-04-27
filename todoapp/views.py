@@ -10,7 +10,8 @@ def test(request):
     if request.method == 'POST':
         task_data = request.POST.get('task_data', 'Task not defined')
         priority = request.POST.get('priority', 3)
-        a = Todolist(task = task_data, priority=priority)
+        task_date = request.POST.get('task_date',None)
+        a = Todolist(task = task_data, priority=priority, due_date=task_date)
         a.save()
         
     sample = {'object_list': Todolist.objects.all().order_by('priority')}

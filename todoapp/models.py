@@ -8,6 +8,7 @@ from django.utils.timezone import get_current_timezone
 class Todolist(models.Model):
 	task = models.CharField(max_length=200, null=True)
 	priority = models.IntegerField(default= '3')
+	due_date = models.DateTimeField(null=True)
 	
 	
 
