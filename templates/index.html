@@ -11,7 +11,8 @@
   <option value="1">High</option>
   <option value="2">Medium</option>
   <option value="3">Low</option>
-</select> <br>
+</select>
+<input type="text" name="task_date" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM"/> <br>
 	<input type="submit"/>
 </form>
 <a href='/delete_all/'> <button>Delete All</button> </a> <br>
@@ -20,7 +21,8 @@
     <a href='/delete/{{x.id}}/'> Delete</a>
     <a href="/update/{{x.id}}/"> update </a>
 	{{x.task}}
-	<strong>{{x.priority}}</strong><br>
+	<strong>{{x.priority}}</strong>
+	Date: {{x.due_date}}<br>
 {% endfor %}
 </body>
 </html>
