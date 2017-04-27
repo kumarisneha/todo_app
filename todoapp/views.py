@@ -13,12 +13,11 @@ def test(request):
         a.save()
         
     sample = {'object_list': Todolist.objects.all()}
-    return render(request, 'test.html', sample)
+    return render(request, 'index.html', sample)
 
 def delete_item(request, id):
     obj=Todolist.objects.get(id=id)
     obj.delete()
-    
     return HttpResponseRedirect('/')
 
 def delete_all(request):
@@ -26,4 +25,17 @@ def delete_all(request):
     for i in obj:
         i.delete()
     return HttpResponseRedirect('/')
+
+def update_list(request, id):
+    obj=Todolist.objects.get(id=id)
+    context={'xyz': obj}
+    return render(request, 'update.html', context)
+
+def newpage(request, id):
+    if request.method == 'POST':
+        name=request.POST.get("name", "Task is updated")
+        obj = Todolist.objects.get(id=id)
+        obj.task=name
+        obj.save()
+        return HttpResponseRedirect('/')
 
