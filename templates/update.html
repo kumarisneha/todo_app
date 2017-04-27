@@ -7,7 +7,8 @@
   <option {% if xyz.priority == 1 %}selected="selected"{% endif %} value="1">High</option>
   <option {% if xyz.priority == 2 %}selected="selected"{% endif %} value="2">Medium</option>
   <option {% if xyz.priority == 3 %}selected="selected"{% endif %} value="3">Low</option>
-</select><br>
+</select>
+<input type="text" name="update_date" value="{{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}}" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM"/><br>
     <input type="submit">
 </form>
 
