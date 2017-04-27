@@ -7,7 +7,11 @@
 <a href=""><h3>MY first Todo list</h3> </a>
 <form action="/" method="post">{% csrf_token %}
 	<input type="text" name="task_data"/>
-	
+	<select name="priority" >
+  <option value="1">High</option>
+  <option value="2">Medium</option>
+  <option value="3">Low</option>
+</select> <br>
 	<input type="submit"/>
 </form>
 <a href='/delete_all/'> <button>Delete All</button> </a> <br>
@@ -15,8 +19,8 @@
 {% for x in object_list %}
     <a href='/delete/{{x.id}}/'> Delete</a>
     <a href="/update/{{x.id}}/"> update </a>
-	{{x.task}}<br>
-	
+	{{x.task}}
+	<strong>{{x.priority}}</strong><br>
 {% endfor %}
 </body>
 </html>
