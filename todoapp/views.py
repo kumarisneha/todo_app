@@ -13,8 +13,12 @@ def registration_page(request):
         user_name = request.POST.get('user_name', 'User name is not given')
         emailid = request.POST.get('email_id', 'emailid not defined')
         passwd= request.POST.get('passwd','not given')
-        a = Registration(user_name = user_name, email_id = emailid, password= passwd)
-        a.save() 
+        try:
+            a = Registration(user_name = user_name, email_id = emailid, password= passwd)
+            a.save() 
+        except IntegrityError:
+            t = "This user already exists"
+            return render(request,"registration.html", {'text': t})
         t = "You have succesfully registered" 
         return render(request,'registration.html', {'text':t})  
     return render(request, 'registration.html')
