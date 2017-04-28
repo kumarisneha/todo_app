@@ -2,11 +2,11 @@
 <html>
 <body>
 <h2>Login</h2>
-<form action="/login_verify/" method="post">{% csrf_token %}
-    Emailid:<input type="text" name="email_id" ><br>
+<form action="/login/" method="post">{% csrf_token %}
+    Email_id:<input type="text" name="email_id" >
     Password: <input type="text" name="passwd"> <br>
-   <button type="submit">Login</button>
+   <button type="submit" >Login</button>
 </form>
-{{text}}
+<b>{{text}}</b>
 </body>
 </html>
