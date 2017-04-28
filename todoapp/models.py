@@ -12,7 +12,7 @@ class Todolist(models.Model):
 
 class Registration(models.Model):
     user_name= models.CharField(max_length = 50, null= True)
-    email_id = models.CharField(max_length = 50, null= True)   
+    email_id = models.CharField(max_length = 50, null= True, unique=True)   
     password= models.CharField(max_length = 50, null= True)
 	
 	
