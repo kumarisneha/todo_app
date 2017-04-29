@@ -1,0 +1,16 @@
+
+body {
+    background-color: powderblue;
+     }
+h2 {
+    color: blue;
+    }
+p {
+    color: red;
+  }
+
+input {
+    border: 1px solid black;
+    padding: 6px;
+    margin: 6px;
+}
