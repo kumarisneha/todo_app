@@ -18,7 +18,7 @@ from django.contrib import admin
 from todoapp import views
 
 urlpatterns = [
-	url(r'^$', views.test),
+	url(r'^$', views.home),
     url(r'^registration/$', views.registration_page),
     url(r'^login/$', views.login_page),
     url(r'^logout/$', views.logout),
