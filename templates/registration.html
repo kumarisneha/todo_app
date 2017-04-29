@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
-<body>
+<head>
+<link rel="stylesheet" href="/static/todo_style/styles.css">
+</head>
+<body background-color: powderblue;>
 <h2>Registration</h2><br>
 <form action="/registration/" method="post">{% csrf_token %}
-	User Name:<input type="text" placeholder="Enter Name" name="user_name"><br>
-    Email_id :<input type="text" placeholder="Enter Email" name="email_id" ><br>
-    Password :<input type="password" placeholder="Enter Password" name="passwd" > <br>
+	<b>User Name:</b><input type="text" placeholder="Enter Name" name="user_name"><br>
+    <b>Email_id :</b><input type="text" placeholder="Enter Email" name="email_id" ><br>
+    <b>Password :</b><input type="password" placeholder="Enter Password" name="passwd" > <br>
     <button type="submit" name="submit" align="middle">Sign Up</button><br>   
 </form>
 <a href="/login/"><button>Login</button></a>
