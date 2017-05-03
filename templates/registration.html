@@ -1,18 +1,64 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<link rel="stylesheet" href="/static/todo_style/styles.css">
+  <title>Registration Page</title>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/custom.css" type="text/css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script> 
 </head>
-<body background-color: powderblue;>
-<h2>Registration</h2><br>
-<form action="/registration/" method="post">{% csrf_token %}
-	<b>User Name:</b><input type="text" placeholder="Enter Name" name="user_name"><br>
-    <b>Email_id :</b><input type="text" placeholder="Enter Email" name="email_id" ><br>
-    <b>Password :</b><input type="password" placeholder="Enter Password" name="passwd" > <br>
-    <button type="submit" name="submit" align="middle">Sign Up</button><br>   
-</form>
-<a href="/login/"><button>Login</button></a>
-<br>
-<b>{{text}}</b>
+
+<body>
+<div class="container">
+ 			<header>
+                <h1><strong>Registration Form</strong> </h1>	
+            </header>
+
+  <div class="row">
+  	<div class="col-md-4">
+          <form class="form-horizontal" action="/registration/" method="post">{% csrf_token %}
+
+          <fieldset>
+            <div class="control-group">
+              <label class="control-label" for="username">Username</label>
+              <div class="controls">
+                <input type="text" name="user_name" placeholder="Your name" class="form-control input-lg">
+                <p class="help-block"><strong>Username can contain any letters or numbers, without spaces</strong></p>
+              </div>
+            </div>
+         
+            <div class="control-group">
+              <label class="control-label" for="email">E-mail</label>
+              <div class="controls">
+                <input type="email" id="email" name="email_id" placeholder="Email" class="form-control input-lg">
+                <p class="help-block">Please provide your E-mail</p>
+              </div>
+            </div>
+         
+            <div class="control-group">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                <input type="password" id="password" name="passwd" placeholder="Password" class="form-control input-lg">
+                <p class="help-block">Password should be at least 6 characters</p>
+              </div>
+            </div>         
+            <br>        
+            <div class="control-group">
+              <!-- Button -->             
+                <button type="submit" name="submit" class="btn btn-success btn-md">Register</button>        
+                <a href="/login/"><button type="button" class="btn btn-info btn-md">Login</button></a> 
+            </div>
+          </fieldset>
+        </form>
+    
+    </div> 
+    
+  </div>
+</div>
+<h3><strong>{{text}}</strong></h3>
 </body>
 </html>
