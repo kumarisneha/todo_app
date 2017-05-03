@@ -1,12 +1,57 @@
+
 <!DOCTYPE html>
-<html>
-<body>
-<h2>Login</h2>
-<form action="/login/" method="post">{% csrf_token %}
-    Email_id:<input type="text" name="email_id" >
-    Password: <input type="text" name="passwd"> <br>
-   <button type="submit" >Login</button>
-</form>
-<b>{{text}}</b>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/custom.css" type="text/css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  
+</head>
+<body id="login_bg">
+
+<div class="container">
+
+  
+          <form class="form-horizontal" action="/login/" method="post">{% csrf_token %}
+           <header>
+                <h1><strong>Login</strong></h1>  
+            </header>
+          <fieldset>
+            <div class="row">
+                <div class="col-md-4">
+            <div class="control-group">
+              <label class="control-label" for="email">E-mail</label>
+              <div class="controls">
+                <input type="email" id="email" name="email_id" placeholder="Enter Email" class="form-control input-lg">
+                <p class="help-block">Please provide your E-mail</p>
+              </div>
+            </div>
+         
+            <div class="control-group">
+              <label class="control-label" for="password">Password</label>
+              <div class="controls">
+                <input type="password" id="password" name="passwd" placeholder="Enter Password" class="form-control input-lg">
+              </div>
+            </div> <br>
+             </div>
+             </div>
+             <div class="row">
+             <div class="col-md-6">
+               <div class="control-group">    
+                <button type="submit" class="btn btn-info btn-md">Login</button>    
+                </div>
+           </div>
+           </div>
+          </fieldset>
+          
+        </form>
+    </div>   
+</div>
+<h3><strong>{{text}}</strong></h3>
 </body>
 </html>
