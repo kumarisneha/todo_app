@@ -92,8 +92,12 @@ def home(request):
         task_data = request.POST.get('task_data', 'Task not defined')
         priority = request.POST.get('priority', 3)
         task_date = request.POST.get('task_date',None)
-        if task_date == '':
+        print priority
+        print task_date
+        if task_date.strip() == '':
             task_date = None
+        if priority == 'Priority':
+            priority = 3
         if task_date:
             task_date=datetime.datetime.strptime(task_date, '%Y-%m-%d %H:%M')
         a = Todolist(task = task_data, priority = priority, due_date= task_date, person_id= person_id)
@@ -102,9 +106,15 @@ def home(request):
 
     choose = request.GET.get('choose',1)
     if int(choose) == 2 :
-        context={'todo_list': Todolist.objects.filter(person_id = person_id).order_by('due_date')}
+        context={
+            'todo_list': Todolist.objects.filter(person_id = person_id).order_by('due_date'),
+            'username': Registration.objects.get(id=person_id).user_name
+            }
     else:
-        context={'todo_list': Todolist.objects.filter(person_id = person_id).order_by('priority')}     
+        context={
+            'todo_list': Todolist.objects.filter(person_id = person_id).order_by('priority'),
+            'username': Registration.objects.get(id=person_id).user_name
+            }     
     return render(request, 'index.html', context)
 
 def delete_item(request, id):
