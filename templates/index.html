@@ -11,16 +11,27 @@
   <script src="/static/js/bootstrap.min.js"></script>
 
 </head>
-<body id="index_bg">
-<nav class="navbar navbar-inverse">
+<body>
+<nav class="navbar navbar-static-top" style="background-color: #337ab7;">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"><strong>To-do List</strong></a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">To-do List</a>
     </div>
-    
-    <ul class="nav navbar-nav navbar-right">
-      <li><a href='/logout'><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
-    </ul>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      
+     
+      <ul class="nav navbar-nav navbar-right">
+         <li ><a href="#">Hello, {{username}}</a></li>
+         <li><a href='/logout'><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+      </ul>
+    </div>
   </div>
 </nav>
 
@@ -28,18 +39,18 @@
     <div class="container">
   <label><h3>Write your Task</h3></label>
 
-    <form role="form">
+    <form role="form" action="/" method="post">{% csrf_token %}
       <div class="row">
         <div class="col-sm-5">
          <div class="form-group">
-        <input type="text" class="form-control" placeholder="Your Task" name="task_data">
+        <input type="text" class="form-control" placeholder="Your Task" name="task_data" />
        </div>
        </div>
 
        <div class="col-sm-2">
        <div class="form-group">
       <select class="form-control"  name="priority"> 
-      <option >Priority</option>
+      <option>Priority</option>
         <option value="1">High</option>
         <option value="2">Medium</option>
         <option value="3">Low</option>
@@ -52,12 +63,12 @@
       </div>
        <div class="col-sm-3">
          <div class="form-group">
-        <input type="text" name="task_date" class="form-control" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM">
+        <input type="text" name="task_date" class="form-control" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM" />
          </div>
          </div>
        </div>
 
-       <button type="submit" class="btn btn-info btn-sm">Submit</button>
+       <button type="submit" name="submit" class="btn btn-info btn-sm">Submit</button>
     </form>
  
         <div class="row">
@@ -82,8 +93,7 @@
         </div>
         </form>
        </div>
-    
-  <table class="table table-bordered" style="background-color: white">
+       <table class="table table-bordered" style="background-color: white">
     <thead class="bg-primary">
       <tr>
         <th>Task list</th>
@@ -94,11 +104,11 @@
     </thead>
     
     <tbody>
-{% for x in todo_list %}
+    {% for x in todo_list %}
       <tr>
-        <td>{{ x.task }}xxx</td>
-        <td>{{ x.priority }}</td>
-        <td>{{ x.due_date }}</td>
+        <td>{{x.task}}</td>
+        <td>{{x.priority}}</td>
+        <td>{{x.due_date}}</td>
         <td>
        <a href='/delete/{{x.id}}/'><button type="button" class="btn btn-info btn-xs">
           <span class="glyphicon glyphicon-remove"></span> Delete
@@ -108,11 +118,14 @@
           <span class="glyphicon glyphicon-edit"></span> Edit
         </button></a>       
         </td>
+       
       </tr>
-     {% endfor %} 
+     {% endfor %}
     </tbody>
     
   </table>
- </div>
+   </div> 
+  
+ 
 </body>
 </html>
