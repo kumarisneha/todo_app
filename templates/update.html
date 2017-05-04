@@ -1,17 +1,62 @@
 <!DOCTYPE html>
-<html>
-<body>
-{{text}}
-<form action="/newpage/{{xyz.id}}/" method="post">{% csrf_token %}
-	<input type="text" name="name" value="{{xyz.task}}">
-	<select name="priority" >
-  <option {% if xyz.priority == 1 %}selected="selected"{% endif %} value="1">High</option>
-  <option {% if xyz.priority == 2 %}selected="selected"{% endif %} value="2">Medium</option>
-  <option {% if xyz.priority == 3 %}selected="selected"{% endif %} value="3">Low</option>
-</select>
-<input type="text" name="update_date" value="{% if xyz.due_date %} {{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}} {% endif %}" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM"/><br>
-    <input type="submit">
-</form>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/custom.css">
+  <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
 
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href=""><strong>To-do List</strong></a>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="container">
+  <label><h2>Edit your Task</h2></label>
+
+    <form role="form" action="/newpage/{{xyz.id}}/" method="post">{% csrf_token %}
+      <div class="row">
+        <div class="col-sm-5">
+         <div class="form-group">
+        <input type="text" name="name" value="{{xyz.task}}" class="form-control" />
+       </div>
+       </div>
+
+       <div class="col-sm-2">
+       <div class="form-group">
+      <select class="form-control"  name="priority"> 
+        <option {% if xyz.priority == 1 %}selected="selected"{% endif %} value="1">High</option>
+        <option {% if xyz.priority == 2 %}selected="selected"{% endif %} value="2">Medium</option>
+        <option {% if xyz.priority == 3 %}selected="selected"{% endif %} value="3">Low</option>
+       </select>
+        </div>
+       </div>
+
+       <div class="col-sm-1">
+      <h4><strong>Due_date:</strong></h4>
+      </div>
+       <div class="col-sm-3">
+         <div class="form-group">
+        <input type="text" name="update_date" value="{% if xyz.due_date %}{{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}}{% endif %}" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM" class="form-control" title="Enter a date in this formart YYYY-MM-DD HH:MM" />
+         </div>
+         </div>
+       </div>
+
+       <button type="submit" class="btn btn-info btn-md">Submit</button>
+       <a href="/"><button type="button" class="btn btn-info btn-md">Cancel</button></a>  
+    </form>
+ 
+        
+ 
 </body>
 </html>
