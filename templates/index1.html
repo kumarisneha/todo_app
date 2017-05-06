@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome to TodoApp</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/custom.css" type="text/css"/>
+  <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+{{text}}
+<form action="/newpage/{{xyz.id}}/" method="post">{% csrf_token %}
+  <input type="text" name="name" value="{{xyz.task}}">
+  <select name="priority" >
+  <option {% if xyz.priority == 1 %}selected="selected"{% endif %} value="1">High</option>
+  <option {% if xyz.priority == 2 %}selected="selected"{% endif %} value="2">Medium</option>
+  <option {% if xyz.priority == 3 %}selected="selected"{% endif %} value="3">Low</option>
+</select>
+<input type="text" name="update_date" value="{% if xyz.due_date %} {{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}} {% endif %}" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM"/><br>
+    <input type="submit">
+</form>
+</body>
+</html>
