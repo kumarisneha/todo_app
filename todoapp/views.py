@@ -9,6 +9,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+from todo.celery import reverse
+
+# from django.core.mail import send_mail
+# send_mail('Django Mail', 'First message using django.', 'kumarisneha102@gmail.com', ['snehatezu@gmail.com'], fail_silently=False)
 # Create your views here.
 def registration_page(request):
     if request.method == 'POST':
@@ -84,6 +88,8 @@ def login_valid(request):
     return HttpResponseRedirect('/')
 
 def home(request):
+    print reverse("Sneha")
+    reverse.delay("kumari")
     print request.session.get('user_login', None)
     if not request.session.get('user_login', None):
         return HttpResponseRedirect('/login')
@@ -108,12 +114,14 @@ def home(request):
     if int(choose) == 2 :
         context={
             'todo_list': Todolist.objects.filter(person_id = person_id).order_by('due_date'),
-            'username': Registration.objects.get(id=person_id).user_name
+            'username': Registration.objects.get(id=person_id).user_name,
+            'emailid': Registration.objects.get(id=person_id).email_id,
             }
     else:
         context={
             'todo_list': Todolist.objects.filter(person_id = person_id).order_by('priority'),
-            'username': Registration.objects.get(id=person_id).user_name
+            'username': Registration.objects.get(id=person_id).user_name,
+            'emailid': Registration.objects.get(id=person_id).email_id,
             }     
     return render(request, 'index.html', context)
 
