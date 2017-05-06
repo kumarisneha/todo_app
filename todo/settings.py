@@ -25,7 +25,7 @@ SECRET_KEY = 'i421-r0oo!un0s&2*5o*+2h-8bu&g(%o-18%2h8)c-7#d%goks'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,6 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'todoapp',
 ]
+
+#Sending email
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'snehatezu@gmail.com'
+EMAIL_HOST_PASSWORD = '9085172131'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -100,6 +108,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# CELERY STUFF
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
