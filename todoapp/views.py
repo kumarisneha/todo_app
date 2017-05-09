@@ -9,7 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from todo.celery import reverse
+from todo.celery import reverse, some_task
 
 # from django.core.mail import send_mail
 # send_mail('Django Mail', 'First message using django.', 'kumarisneha102@gmail.com', ['snehatezu@gmail.com'], fail_silently=False)
@@ -88,8 +88,6 @@ def login_valid(request):
     return HttpResponseRedirect('/')
 
 def home(request):
-    print reverse("Sneha")
-    reverse.delay("kumari")
     print request.session.get('user_login', None)
     if not request.session.get('user_login', None):
         return HttpResponseRedirect('/login')
@@ -115,12 +113,15 @@ def home(request):
         context={
             'todo_list': Todolist.objects.filter(person_id = person_id).order_by('due_date'),
             'username': Registration.objects.get(id=person_id).user_name,
+            'user_id': Registration.objects.get(id=person_id).id,
+            'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
             'emailid': Registration.objects.get(id=person_id).email_id,
             }
     else:
         context={
             'todo_list': Todolist.objects.filter(person_id = person_id).order_by('priority'),
             'username': Registration.objects.get(id=person_id).user_name,
+            'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
             'emailid': Registration.objects.get(id=person_id).email_id,
             }     
     return render(request, 'index.html', context)
@@ -168,4 +169,24 @@ def newpage(request, id):
         obj.person_id = person_id
         obj.save()
         return HttpResponseRedirect('/')
+
+def new_passwd(request):
+    if request.method == 'POST':
+        person_id = request.session.get('user_login', None)
+        old_password= request.POST.get("old_pass", None)
+        new_password = request.POST.get("new_pass", None)
+        try:
+            new_pass_valid = Registration.objects.get(id = person_id, password= old_password)
+            print "new password %s" % new_password
+            new_pass_valid.password = new_password
+            new_pass_valid.save()
+            return HttpResponseRedirect('/')
+        except ObjectDoesNotExist:
+            t = "Old password is invalid"
+            return render(request,'change_passwd.html', {'text':t}) 
+    return render(request, 'change_passwd.html') 
+        
+
+
+
 
