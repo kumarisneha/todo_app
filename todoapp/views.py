@@ -175,11 +175,16 @@ def new_passwd(request):
         person_id = request.session.get('user_login', None)
         old_password= request.POST.get("old_pass", None)
         new_password = request.POST.get("new_pass", None)
+        confirm_password = request.POST.get("confirm_new_pass", None)
         try:
             new_pass_valid = Registration.objects.get(id = person_id, password= old_password)
             print "new password %s" % new_password
-            new_pass_valid.password = new_password
-            new_pass_valid.save()
+            if new_password == confirm_password:
+                new_pass_valid.password = new_password
+                new_pass_valid.save()
+            else:
+                t = "New password doesn't match to old password"
+                return render(request,'change_passwd.html', {'text':t})
             return HttpResponseRedirect('/')
         except ObjectDoesNotExist:
             t = "Old password is invalid"
