@@ -1,68 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/custom.css" type="text/css"/>
-  <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="/static/js/bootstrap.min.js"></script>
+{% extends "layout.html" %}
+{% block hello_user %} {{user}} {% endblock %}
+{% block text-center %} {{username}} {% endblock %}
 
-</head>
-<body>
-<nav class="navbar navbar-static-top" style="background-color: #337ab7;">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">To-do List</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-  <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="glyphicon glyphicon-user"></span>
-                        <strong>Hello, {{user}}</strong>
-                        <span class="glyphicon glyphicon-chevron-down"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                    
-       
-                        <li>             
-                                  
-                                        <p class="text-center"><strong>{{username}}</strong></p>
-                                        <p class="text-center small">{{emailid}}</p>
-                                        <p class="text-left">
-                                        </p>
-                        </li>
-                        
-                       
-                        <li class="divider"></li>
-                         <li><a href="/new_password">Change Password </a></li>         
-                        <li class="divider"></li>
-                         <li><a href='/logout'><span class="glyphicon glyphicon-log-out"></span> Logout</a></li> 
-               
-               </ul>
-              
-              
-                </li>           
-      </ul>   
-      
-    </div>
-   
-  </div>
-</nav>
-
-
-    <div class="container">
+{% block center %} {{emailid}}{% endblock %}
+    {% block container %}
   <label><h3>Write your Task</h3></label>
 
     <form role="form" action="/" method="post">{% csrf_token %}
@@ -89,7 +30,7 @@
       </div>
        <div class="col-sm-3">
          <div class="form-group">
-        <input type="text" name="task_date" class="form-control" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM" />
+        <input type="text" name="task_date" readonly class="form-control form_datetime" placeholder="YYYY-MM-DD HH:MM"  />
          </div>
          </div>
        </div>
@@ -111,8 +52,8 @@
       <select class="form-control"  name="choose" onchange="this.form.submit()">
        
       <option >Sort By</option>
-        <option value="1">Priority</option>
-        <option value="2">Date</option>
+        <option {% if choose == 1 %}selected="selected"{% endif %} value="1">Priority</option>
+        <option {% if choose == 2 %}selected="selected"{% endif %} value="2">Date</option>
         
         </select>
         </div>
@@ -150,8 +91,14 @@
     </tbody>
     
   </table>
-   </div> 
-  
- 
-</body>
-</html>
+  {% endblock %}
+
+ {% block calender %} 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+</script>
+{% endblock %} 
