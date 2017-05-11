@@ -19,6 +19,7 @@ def registration_page(request):
         user_name = request.POST.get('user_name', None)
         emailid = request.POST.get('email_id', None)
         passwd= request.POST.get('passwd', None)
+        confirm_password= request.POST.get('confirm_new_pass', None)
         if str(emailid) == '':
             emailid = None
         if str(user_name) == '':
@@ -35,8 +36,13 @@ def registration_page(request):
         try:
             validate_email(emailid)
             try:
-                a = Registration(user_name = user_name, email_id = emailid, password= passwd)
-                a.save() 
+                if emailid == confirm_password:
+                    a = Registration(user_name = user_name, email_id = emailid, password= passwd)
+                    a.save() 
+                else:
+                    compare = "The password you entered do not match"
+                    return render(request,'registration.html', {'text':compare})
+
             except IntegrityError:
                 t = "This user already exists"
                 return render(request,"registration.html", {'text': t})
@@ -116,13 +122,16 @@ def home(request):
             'user_id': Registration.objects.get(id=person_id).id,
             'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
             'emailid': Registration.objects.get(id=person_id).email_id,
+            'choose': int(choose),
             }
     else:
         context={
             'todo_list': Todolist.objects.filter(person_id = person_id).order_by('priority'),
             'username': Registration.objects.get(id=person_id).user_name,
             'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
+            'user_id': Registration.objects.get(id=person_id).id,
             'emailid': Registration.objects.get(id=person_id).email_id,
+            'choose': int(choose),
             }     
     return render(request, 'index.html', context)
 
@@ -145,7 +154,11 @@ def update_list(request, id):
     except:
         t = "Unauthorized access" 
         return render(request,'update.html', {'text':t})
-    context={'xyz': obj}
+    context={
+    'username': Registration.objects.get(id=person_id).user_name,
+    'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
+    'emailid': Registration.objects.get(id=person_id).email_id,
+    'xyz': obj}
     return render(request, 'update.html', context)
 
 def newpage(request, id):
@@ -171,6 +184,7 @@ def newpage(request, id):
         return HttpResponseRedirect('/')
 
 def new_passwd(request):
+    person_id = request.session.get('user_login', None)
     if request.method == 'POST':
         person_id = request.session.get('user_login', None)
         old_password= request.POST.get("old_pass", None)
@@ -183,13 +197,19 @@ def new_passwd(request):
                 new_pass_valid.password = new_password
                 new_pass_valid.save()
             else:
-                t = "New password doesn't match to old password"
-                return render(request,'change_passwd.html', {'text':t})
+                compare = "The new password you entered does not match"
+                return render(request,'change_passwd.html', {'text':compare})
             return HttpResponseRedirect('/')
         except ObjectDoesNotExist:
-            t = "Old password is invalid"
-            return render(request,'change_passwd.html', {'text':t}) 
-    return render(request, 'change_passwd.html') 
+            tt = "Old password is invalid"
+            return render(request,'change_passwd.html', {'text':tt}) 
+    context={
+    'username': Registration.objects.get(id=person_id).user_name,
+    'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
+    'emailid': Registration.objects.get(id=person_id).email_id,
+    }
+    return render(request, 'change_passwd.html', context)
+    
         
 
 
