@@ -1,27 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/custom.css">
-  <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="/static/js/bootstrap.min.js"></script>
-
-</head>
-<body>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href=""><strong>To-do List</strong></a>
-    </div>
-  </div>
-</nav>
-
-
-    <div class="container">
+{% extends "layout.html" %}
+{% block hello_user %} {{user}} {% endblock %}
+{% block text-center %} {{username}} {% endblock %}
+{% block center %} {{emailid}}{% endblock %}
+    {% block container %}
   <label><h2>Edit your Task</h2></label>
 
     <form role="form" action="/newpage/{{xyz.id}}/" method="post">{% csrf_token %}
@@ -47,16 +28,23 @@
       </div>
        <div class="col-sm-3">
          <div class="form-group">
-        <input type="text" name="update_date" value="{% if xyz.due_date %}{{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}}{% endif %}" placeholder="YYYY-MM-DD HH:MM" title="Enter a date in this formart YYYY-MM-DD HH:MM" class="form-control" title="Enter a date in this formart YYYY-MM-DD HH:MM" />
+         <input type="text" name="update_date" value="{% if xyz.due_date %}{{xyz.due_date.year}}-{{xyz.due_date.month}}-{{xyz.due_date.day}} {{xyz.due_date.hour}}:{{xyz.due_date.minute}}{% endif %}" readonly class="form-control form_datetime" placeholder="YYYY-MM-DD HH:MM"  />
+      
          </div>
          </div>
+  
        </div>
 
        <button type="submit" class="btn btn-info btn-md">Submit</button>
        <a href="/"><button type="button" class="btn btn-info btn-md">Cancel</button></a>  
     </form>
  
-        
- 
-</body>
-</html>
+{% endblock %}
+ {% block calender %}     
+         <script type="text/javascript" src="/static/bootstrap-datetimepicker/sample in bootstrap v2/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/sample in bootstrap v2/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
+</script> {% endblock %}
