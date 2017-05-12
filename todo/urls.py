@@ -20,6 +20,7 @@ from todoapp import views
 urlpatterns = [
 	url(r'^$', views.home),
     url(r'^registration/$', views.registration_page),
+    url(r'^verification/(?P<code>.*)$', views.verify),
     url(r'^login/$', views.login_page),
     url(r'^logout/$', views.logout),
     url(r'^login_verify/$',views.login_valid),
