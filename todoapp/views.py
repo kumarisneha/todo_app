@@ -10,6 +10,10 @@ from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from todo.celery import reverse, some_task
+import base64
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+
 
 # from django.core.mail import send_mail
 # send_mail('Django Mail', 'First message using django.', 'kumarisneha102@gmail.com', ['snehatezu@gmail.com'], fail_silently=False)
@@ -36,9 +40,19 @@ def registration_page(request):
         try:
             validate_email(emailid)
             try:
-                if emailid == confirm_password:
+                if passwd == confirm_password:
                     a = Registration(user_name = user_name, email_id = emailid, password= passwd)
-                    a.save() 
+                    a.save()
+                    user_email= a.email_id
+                    email_encode= base64.b64encode(user_email)
+                    print email_encode
+                    subject, from_email, to = 'hello %s' % str(a.user_name), 'snehatezu@gmail.com', user_email
+                    text_content = 'Complete registration with to-do app'
+                    html_content ='<a href="http://127.0.0.1:8000/verification/%s"> <p>Click here to complete your registration</p></a>' % email_encode
+                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
+
                 else:
                     compare = "The password you entered do not match"
                     return render(request,'registration.html', {'text':compare})
@@ -46,12 +60,21 @@ def registration_page(request):
             except IntegrityError:
                 t = "This user already exists"
                 return render(request,"registration.html", {'text': t})
-            t = "You have succesfully registered" 
+            t = "You have succesfully registered and your registration email is sent to your email id" 
             return render(request,'registration.html', {'text':t})
         except ValidationError:
             t = "oops!!! wrong email"
             return render(request,"registration.html", {'text': t})                 
     return render(request, 'registration.html')
+
+def verify(request, code):
+
+    email_decode = base64.b64decode(code)
+    print email_decode
+    obj=Registration.objects.get( email_id= email_decode )
+    obj.email_verified = True
+    obj.save()
+    return HttpResponseRedirect('/')
 
 def login_page(request):
     if request.method == 'POST':
@@ -62,9 +85,12 @@ def login_page(request):
         print passwd
         try:
             email_val= Registration.objects.get(email_id = email_id, password = passwd)
-            print email_val
-            request.session['user_login'] = email_val.id
-            return HttpResponseRedirect('/')
+            if email_val.email_verified == True:
+                request.session['user_login'] = email_val.id
+                return HttpResponseRedirect('/')
+            else:
+                t = "You have not verified your email" 
+                return render(request,'login.html', {'text':t})
         except ObjectDoesNotExist:
             t = "Email or password is not valid. Please try again" 
             return render(request,'login.html', {'text':t})     
