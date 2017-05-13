@@ -47,8 +47,10 @@ def some_task():
             noti_date = mm.total_seconds()/60
             #print x.person_id
             print x.task
-            obj = Registration.objects.get(id = x.person_id)
-            ss = str(obj.email_id)
-            if noti_date > 0 and noti_date <20:
-                send_mail('Hii %s' % str(obj.user_name), "Just a reminder that your {%s} task is due soon." %x.task, 'snehatezu@gmail.com', [ss], fail_silently=False)
+            obj = Registration.objects.get(id = x.person.id)
+            print type(obj.email_active)
+            if obj.email_active:
+                ss = str(obj.email_id)
+                if noti_date > 0 and noti_date <20:
+                    send_mail('Hii %s' % str(obj.user_name), "Just a reminder that your {%s} task is due soon." %x.task, 'snehatezu@gmail.com', [ss], fail_silently=False)
                 #print obj.email_id

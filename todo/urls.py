@@ -28,6 +28,7 @@ urlpatterns = [
 	url(r'^delete_all/$',views.delete_all),
     url(r'^update/(\d+)/$',views.update_list),
     url(r'^new_password/$',views.new_passwd),
+    url(r'^notification_setting/$',views.email_notification),
     url(r'^newpage/(\d+)/$',views.newpage),
     url(r'^admin/', admin.site.urls),
 ]
