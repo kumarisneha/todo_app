@@ -10,6 +10,7 @@ class Registration(models.Model):
     email_id = models.CharField(max_length = 50, unique=True)   
     password= models.CharField(max_length = 50)
     email_verified = models.BooleanField(default=False)
+    email_active = models.BooleanField(default=True)
     
 class Todolist(models.Model):
 	task = models.CharField(max_length=200, null=True)
