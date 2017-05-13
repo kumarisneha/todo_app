@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block hello_user %} {{user}} {% endblock %}
+{% block text-center %} {{username}} {% endblock %}
+{% block center %} {{emailid}} {% endblock %}
+    {% block container %}
+          <form class="form-horizontal" action="/notification_setting/" method="post">{% csrf_token %}
+          
+              <div class="controls">
+                <input type="checkbox" name="check_mail" value="1">You want to deactivate your email notification
+               
+              </div>
+        <input type="submit" value="Submit">
+        </form>
+   {% endblock %}
+{% block calender %}     
+         <script type="text/javascript" src="/static/bootstrap-datetimepicker/sample in bootstrap v2/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/sample in bootstrap v2/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+</script> {% endblock %}
