@@ -161,6 +161,22 @@ def home(request):
             }     
     return render(request, 'index.html', context)
 
+def email_notification(request):
+    person_id = request.session.get('user_login', None)
+    if request.method == 'POST':
+        check_mail = request.POST.get('check_mail', None)
+        print "Print somethinmg"
+        print check_mail
+        if check_mail == None:
+            pass
+        else:
+            obj = Registration.objects.get(id=person_id)
+            obj.email_active = 0
+            obj.save()
+            print obj.email_active
+            return HttpResponseRedirect('/')
+    return render(request,'email_notification.html')
+
 def delete_item(request, id):
     obj=Todolist.objects.get(id=id)
     obj.delete()
