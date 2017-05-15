@@ -1,4 +1,6 @@
-
+.redtext {
+  color: red;
+}
 
 .bg {
   background: url('todo list/checklist.jpg') no-repeat center center;
