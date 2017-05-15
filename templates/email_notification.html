@@ -6,7 +6,7 @@
           <form class="form-horizontal" action="/notification_setting/" method="post">{% csrf_token %}
           
               <div class="controls">
-                <input type="checkbox" name="check_mail" value="1">You want to deactivate your email notification
+                <input type="checkbox" name="check_mail" {% if email_active %} checked="checked" {% endif %} value="1">Subscribe me for email notification.
                
               </div>
         <input type="submit" value="Submit">
