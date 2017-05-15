@@ -25,8 +25,9 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 #     print('Request: {0!r}'.format(self.request))
     
 @app.task(bind=True)
-def reverse(self, string):
-    return string[::-1]
+def send_mail_task(self, subject, message, to_email, from_email):
+    send_mail(subject, message, to_email, from_email, fail_silently=True)
+    return 
 
 @periodic_task(run_every=(crontab(minute='*/1')), name="some_task", ignore_result=True)
 def some_task():
@@ -46,7 +47,8 @@ def some_task():
             print mm.total_seconds()/60
             noti_date = mm.total_seconds()/60
             #print x.person_id
-            print x.task
+            print x
+            print x.person.id
             obj = Registration.objects.get(id = x.person.id)
             print type(obj.email_active)
             if obj.email_active:
