@@ -20,7 +20,8 @@ from todoapp import views
 urlpatterns = [
 	url(r'^$', views.home),
     url(r'^registration/$', views.registration_page),
-    url(r'^verification/(?P<code>.*)$', views.verify),
+    url(r'^reset_password/(?P<code>.*)/$', views.forgot_pass_verify),
+    url(r'^verification/(?P<code>.*)/$', views.verify),
     url(r'^login/$', views.login_page),
     url(r'^logout/$', views.logout),
     url(r'^login_verify/$',views.login_valid),
@@ -28,6 +29,7 @@ urlpatterns = [
 	url(r'^delete_all/$',views.delete_all),
     url(r'^update/(\d+)/$',views.update_list),
     url(r'^new_password/$',views.new_passwd),
+    url(r'^forgot_password/$',views.forgot_password),
     url(r'^notification_setting/$',views.email_notification),
     url(r'^newpage/(\d+)/$',views.newpage),
     url(r'^admin/', admin.site.urls),
