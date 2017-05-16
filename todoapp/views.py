@@ -4,16 +4,17 @@ import time
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from todoapp.models import Todolist, Registration
+from todoapp.utils import hashed_func
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from todo.celery import reverse, some_task
+from todo.celery import send_multi_mail, some_task, send_mail_task
 import base64
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-
+from django.contrib import messages
 
 # from django.core.mail import send_mail
 # send_mail('Django Mail', 'First message using django.', 'kumarisneha102@gmail.com', ['snehatezu@gmail.com'], fail_silently=False)
@@ -41,7 +42,7 @@ def registration_page(request):
             validate_email(emailid)
             try:
                 if passwd == confirm_password:
-                    a = Registration(user_name = user_name, email_id = emailid, password= passwd)
+                    a = Registration(user_name = user_name, email_id = emailid, password= hashed_func(passwd))
                     a.save()
                     user_email= a.email_id
                     email_encode= base64.b64encode(user_email)
@@ -49,10 +50,10 @@ def registration_page(request):
                     subject, from_email, to = 'hello %s' % str(a.user_name), 'snehatezu@gmail.com', user_email
                     text_content = 'Complete registration with to-do app'
                     html_content ='<a href="http://127.0.0.1:8000/verification/%s"> <p>Click here to complete your registration</p></a>' % email_encode
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
-
+                    # msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    # msg.attach_alternative(html_content, "text/html")
+                    # msg.send()
+                    send_multi_mail.delay(subject, text_content,html_content, from_email, to)
                 else:
                     compare = "The password you entered do not match"
                     return render(request,'registration.html', {'text':compare})
@@ -84,7 +85,7 @@ def login_page(request):
         print email_id
         print passwd
         try:
-            email_val= Registration.objects.get(email_id = email_id, password = passwd)
+            email_val= Registration.objects.get(email_id = email_id, password = hashed_func(passwd))
             if email_val.email_verified == True:
                 request.session['user_login'] = email_val.id
                 return HttpResponseRedirect('/')
@@ -101,8 +102,7 @@ def logout(request):
         del request.session['user_login']
     except KeyError:
         pass
-    t="You are logged out"
-    return render(request, 'login.html', {'text':t})
+    return render(request, 'login.html')
 
 def login_valid(request):
     if request.method == 'POST':
@@ -111,7 +111,7 @@ def login_valid(request):
         print email_id
         print passwd
         try:
-            email_val= Registration.objects.get(email_id = email_id, password = passwd)
+            email_val= Registration.objects.get(email_id = email_id, password = hashed_func(passwd))
             print email_val
             return HttpResponseRedirect('/')
         except ObjectDoesNotExist:
@@ -168,14 +168,25 @@ def email_notification(request):
         print "Print somethinmg"
         print check_mail
         if check_mail == None:
-            pass
-        else:
             obj = Registration.objects.get(id=person_id)
             obj.email_active = 0
             obj.save()
             print obj.email_active
             return HttpResponseRedirect('/')
-    return render(request,'email_notification.html')
+        else:
+            obj = Registration.objects.get(id=person_id)
+            obj.email_active = 1
+            obj.save()
+            print "here"
+            print obj.email_active
+            return HttpResponseRedirect('/')
+    context={
+    'username': Registration.objects.get(id=person_id).user_name,
+    'user': Registration.objects.get(id=person_id).user_name.split(" ")[0],
+    'emailid': Registration.objects.get(id=person_id).email_id,
+    'email_active': Registration.objects.get(id=person_id).email_active,
+    }
+    return render(request,'email_notification.html',context)
 
 def delete_item(request, id):
     obj=Todolist.objects.get(id=id)
@@ -233,10 +244,10 @@ def new_passwd(request):
         new_password = request.POST.get("new_pass", None)
         confirm_password = request.POST.get("confirm_new_pass", None)
         try:
-            new_pass_valid = Registration.objects.get(id = person_id, password= old_password)
+            new_pass_valid = Registration.objects.get(id = person_id, password= hashed_func(old_password))
             print "new password %s" % new_password
             if new_password == confirm_password:
-                new_pass_valid.password = new_password
+                new_pass_valid.password = hashed_func(new_password)
                 new_pass_valid.save()
             else:
                 compare = "The new password you entered does not match"
@@ -251,9 +262,41 @@ def new_passwd(request):
     'emailid': Registration.objects.get(id=person_id).email_id,
     }
     return render(request, 'change_passwd.html', context)
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email_id = request.POST.get("send_email", None)
+        obj=Registration.objects.get( email_id= email_id)
+        print email_id
+        email_encode= base64.b64encode(email_id)
+        subject, from_email, to = 'Reset your to-do list password', 'snehatezu@gmail.com', email_id
+        text_content = 'Complete registration with to-do app'
+        html_content ='<a href="http://127.0.0.1:8000/reset_password/%s"> <p>Please click on the link below in order to reset your password.</p></a>' % email_encode
+        #msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        #msg.attach_alternative(html_content, "text/html")
+        #msg.send()
+        send_multi_mail.delay(subject, text_content,html_content, from_email, to)
+        messages.info(request, 'We have sent you a link to reset your password!')
+        return render(request,'forgot_password.html')
+    return render(request, 'forgot_password.html')
     
-        
-
-
-
-
+def forgot_pass_verify(request, code):
+    encode_val=code
+    email_decode= base64.b64decode(code)
+    print email_decode
+    print "not working"
+    if request.method == 'POST':
+        new_passwd = request.POST.get('new_password', None)
+        confirm_passwd= request.POST.get('confirm_new_password',None)
+        if new_passwd == confirm_passwd:
+            obj= Registration.objects.get(email_id = email_decode)
+            obj.password = hashed_func(confirm_passwd)
+            obj.save()
+            print obj.password
+            request.session['user_login'] = obj.id
+            return HttpResponseRedirect('/')            
+        else:
+            t = "Password does not match" 
+            return render(request,'reset_passwd.html', {'text':t})  
+    context = {'email_code': encode_val, }
+    return render(request, 'reset_passwd.html',context)
