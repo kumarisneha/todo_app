@@ -6,7 +6,7 @@ from django.conf import settings
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from django.core.mail import send_mail
-
+from django.core.mail import EmailMultiAlternatives
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'todo.settings')
@@ -25,9 +25,15 @@ app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 #     print('Request: {0!r}'.format(self.request))
     
 @app.task(bind=True)
-def send_mail_task(self, subject, message, to_email, from_email):
+def send_mail_task(self, subject, message, from_email, to_email):
     send_mail(subject, message, to_email, from_email, fail_silently=True)
     return 
+
+@app.task(bind=True)
+def send_multi_mail(self, subject, text_content, html_content, from_email, to_email):
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to_email])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
 
 @periodic_task(run_every=(crontab(minute='*/1')), name="some_task", ignore_result=True)
 def some_task():
