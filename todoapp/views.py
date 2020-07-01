@@ -35,18 +35,22 @@ def registration_page(request):
             t = "Please fill all fields"
             return render(request,"registration.html", {'text': t})
 
-        print user_name
-        print emailid
-        print passwd
+        print (user_name)
+        print (emailid)
+        print (passwd)
         try:
             validate_email(emailid)
             try:
                 if passwd == confirm_password:
                     a = Registration(user_name = user_name, email_id = emailid, password= hashed_func(passwd))
+                    print("registarion---------------",hashed_func(passwd))
                     a.save()
                     user_email= a.email_id
-                    email_encode= base64.b64encode(user_email)
-                    print email_encode
+                    message_bytes = user_email.encode('ascii')
+                    base64_bytes = base64.b64encode(message_bytes)
+                    # email_encode= base64.b64encode(message_bytes)
+                    email_encode = base64_bytes.decode('ascii')
+                    print ("email encode-------",email_encode)
                     subject, from_email, to = 'hello %s' % str(a.user_name), 'snehatezu@gmail.com', user_email
                     text_content = 'Complete registration with to-do app'
                     html_content ='<a href="http://127.0.0.1:8000/verification/%s"> <p>Click here to complete your registration</p></a>' % email_encode
@@ -69,10 +73,15 @@ def registration_page(request):
     return render(request, 'registration.html')
 
 def verify(request, code):
+    base64_bytes = code.encode('ascii')
+    message_bytes = base64.b64decode(base64_bytes)
+    email_decode = message_bytes.decode('ascii')
 
-    email_decode = base64.b64decode(code)
-    print email_decode
-    obj=Registration.objects.get( email_id= email_decode )
+    # print("---------verify",code)
+    # email_decode = base64.b64decode(code)
+    # email_decode = code
+    print ("-----------email",email_decode)
+    obj=Registration.objects.get( email_id = email_decode )
     obj.email_verified = True
     obj.save()
     return HttpResponseRedirect('/')
@@ -81,9 +90,9 @@ def login_page(request):
     if request.method == 'POST':
         email_id = request.POST.get('email_id', None)
         passwd= request.POST.get('passwd',None)
-        print request.POST
-        print email_id
-        print passwd
+        print ("&&&&&&&&&&&&&&&&&&&&7",request.POST)
+        print (email_id)
+        print (passwd)
         try:
             email_val= Registration.objects.get(email_id = email_id, password = hashed_func(passwd))
             if email_val.email_verified == True:
@@ -108,11 +117,11 @@ def login_valid(request):
     if request.method == 'POST':
         email_id = request.POST.get('email_id', None)
         passwd= request.POST.get('passwd',None)
-        print email_id
-        print passwd
+        print (email_id)
+        print (passwd)
         try:
             email_val= Registration.objects.get(email_id = email_id, password = hashed_func(passwd))
-            print email_val
+            print (email_val)
             return HttpResponseRedirect('/')
         except ObjectDoesNotExist:
             t = "Email or password is not valid" 
@@ -120,7 +129,7 @@ def login_valid(request):
     return HttpResponseRedirect('/')
 
 def home(request):
-    print request.session.get('user_login', None)
+    print (request.session.get('user_login', None))
     if not request.session.get('user_login', None):
         return HttpResponseRedirect('/login')
     if request.method == 'POST':
@@ -128,8 +137,8 @@ def home(request):
         task_data = request.POST.get('task_data', 'Task not defined')
         priority = request.POST.get('priority', 3)
         task_date = request.POST.get('task_date',None)
-        print priority
-        print task_date
+        print (priority)
+        print (task_date)
         if task_date.strip() == '':
             task_date = None
         if priority == 'Priority':
@@ -165,20 +174,20 @@ def email_notification(request):
     person_id = request.session.get('user_login', None)
     if request.method == 'POST':
         check_mail = request.POST.get('check_mail', None)
-        print "Print somethinmg"
-        print check_mail
+        print ("Print somethinmg")
+        print (check_mail)
         if check_mail == None:
             obj = Registration.objects.get(id=person_id)
             obj.email_active = 0
             obj.save()
-            print obj.email_active
+            print (obj.email_active)
             return HttpResponseRedirect('/')
         else:
             obj = Registration.objects.get(id=person_id)
             obj.email_active = 1
             obj.save()
-            print "here"
-            print obj.email_active
+            print ("here")
+            print (obj.email_active)
             return HttpResponseRedirect('/')
     context={
     'username': Registration.objects.get(id=person_id).user_name,
@@ -245,7 +254,7 @@ def new_passwd(request):
         confirm_password = request.POST.get("confirm_new_pass", None)
         try:
             new_pass_valid = Registration.objects.get(id = person_id, password= hashed_func(old_password))
-            print "new password %s" % new_password
+            print ("new password %s" % new_password)
             if new_password == confirm_password:
                 new_pass_valid.password = hashed_func(new_password)
                 new_pass_valid.save()
@@ -267,7 +276,7 @@ def forgot_password(request):
     if request.method == 'POST':
         email_id = request.POST.get("send_email", None)
         obj=Registration.objects.get( email_id= email_id)
-        print email_id
+        print (email_id)
         email_encode= base64.b64encode(email_id)
         subject, from_email, to = 'Reset your to-do list password', 'snehatezu@gmail.com', email_id
         text_content = 'Complete registration with to-do app'
@@ -283,8 +292,8 @@ def forgot_password(request):
 def forgot_pass_verify(request, code):
     encode_val=code
     email_decode= base64.b64decode(code)
-    print email_decode
-    print "not working"
+    print (email_decode)
+    print ("not working")
     if request.method == 'POST':
         new_passwd = request.POST.get('new_password', None)
         confirm_passwd= request.POST.get('confirm_new_password',None)
@@ -292,7 +301,7 @@ def forgot_pass_verify(request, code):
             obj= Registration.objects.get(email_id = email_decode)
             obj.password = hashed_func(confirm_passwd)
             obj.save()
-            print obj.password
+            print (obj.password)
             request.session['user_login'] = obj.id
             return HttpResponseRedirect('/')            
         else:
