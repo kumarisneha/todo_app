@@ -45,18 +45,18 @@ def some_task():
             pass
         else:
             date_obj = x.due_date
-            print date_obj
+            print (date_obj)
             #date_obj = str(date_obj).split('+')[0]
             #obj_date=datetime.datetime.strptime(date_obj, '%Y-%m-%d %H:%M:%S')    
             mm= (date_obj - datetime.datetime.now())
-            print mm
-            print mm.total_seconds()/60
+            print (mm)
+            print (mm.total_seconds()/60)
             noti_date = mm.total_seconds()/60
             #print x.person_id
-            print x
-            print x.person.id
+            print (x)
+            print (x.person.id)
             obj = Registration.objects.get(id = x.person.id)
-            print type(obj.email_active)
+            print (type(obj.email_active))
             if obj.email_active:
                 ss = str(obj.email_id)
                 if noti_date > 0 and noti_date <20:
