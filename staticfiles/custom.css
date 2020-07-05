@@ -1,0 +1,48 @@
+.redtext {
+  color: red;
+}
+
+.bg {
+  background: url('todo list/checklist.jpg') no-repeat center center;
+  position: fixed;
+  width: 100%; 
+  top:0;
+  left:0;
+  z-index: -1;
+}
+#registration_bg {
+    background-color: black;
+    background: url('todo list/pen1.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#login_bg {
+    background-color: black;
+    background: url('todo list/pen2.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#index_bg {
+    background-color: black;
+    background: url('todo list/sticky.jpg') no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#color-me{
+    color: white;
+}
+
+.navbar-custom {
+    color: #FFFFFF;
+    background-color: #CC3333;
+}
+
