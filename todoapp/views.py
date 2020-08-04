@@ -54,10 +54,10 @@ def registration_page(request):
                     subject, from_email, to = 'hello %s' % str(a.user_name), 'snehatezu@gmail.com', user_email
                     text_content = 'Complete registration with to-do app'
                     html_content ='<a href="http://127.0.0.1:8000/verification/%s"> <p>Click here to complete your registration</p></a>' % email_encode
-                    # msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    # msg.attach_alternative(html_content, "text/html")
-                    # msg.send()
-                    send_multi_mail.delay(subject, text_content,html_content, from_email, to)
+                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
+                    # send_multi_mail.delay(subject, text_content, html_content, from_email, to)
                 else:
                     compare = "The password you entered do not match"
                     return render(request,'registration.html', {'text':compare})
@@ -87,6 +87,9 @@ def verify(request, code):
     return HttpResponseRedirect('/')
 
 def login_page(request):
+    if request.session.get('user_login', None):
+        return HttpResponseRedirect('/')
+
     if request.method == 'POST':
         email_id = request.POST.get('email_id', None)
         passwd= request.POST.get('passwd',None)
@@ -167,7 +170,7 @@ def home(request):
             'user_id': Registration.objects.get(id=person_id).id,
             'emailid': Registration.objects.get(id=person_id).email_id,
             'choose': int(choose),
-            }     
+            }
     return render(request, 'index.html', context)
 
 def email_notification(request):
